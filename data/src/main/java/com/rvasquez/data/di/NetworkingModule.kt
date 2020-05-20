@@ -2,7 +2,6 @@ package com.rvasquez.data.di
 
 import com.rvasquez.data.BuildConfig
 import com.rvasquez.data.networking.WeatherApi
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -16,11 +15,12 @@ const val API_KEY = "7cc9e3c896382cc1d3175b9a6f3fd941"
 
 val networkingModule = module {
     single { GsonConverterFactory.create() as Converter.Factory }
-    single { HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY) as Interceptor }
     single {
         OkHttpClient.Builder().apply {
-            if (BuildConfig.DEBUG) addInterceptor(get())
-                .callTimeout(10, TimeUnit.SECONDS)
+            if (BuildConfig.DEBUG)
+                addNetworkInterceptor(
+                    HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+                ).callTimeout(10, TimeUnit.SECONDS)
         }.build()
     }
     single {

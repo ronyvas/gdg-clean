@@ -2,14 +2,15 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 android {
-    compileSdkVersion Integer.parseInt(ANDROID_COMPILE_SDK_VERSION)
+    compileSdkVersion rootProject.ext.compile_sdk_version
+    buildToolsVersion rootProject.ext.build_tools_version
 
 
     defaultConfig {
-        minSdkVersion Integer.parseInt(ANDROID_MIN_SDK_VERSION)
-        targetSdkVersion Integer.parseInt(ANDROID_TARGET_SDK_VERSION)
-        versionCode Integer.parseInt(VERSION_CODE)
-        versionName VERSION_NAME
+        minSdkVersion rootProject.ext.min_sdk_version
+        targetSdkVersion rootProject.ext.target_sdk_version
+        versionCode rootProject.ext.version_code
+        versionName rootProject.ext.version_name
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -27,20 +28,17 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    // Common:
+    implementation rootProject.ext.common.kotlin_stdlib_jdk7
+    implementation rootProject.ext.common.core_ktlx
 
     //testing
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoVersion"
+    testImplementation rootProject.ext.testCommon.junit
+    testImplementation rootProject.ext.testCommon.core_testing
+    testImplementation rootProject.ext.testCommon.koin_test
+    implementation rootProject.ext.testCommon.test_core
 
-    //coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-
-    //di
-    implementation "org.koin:koin-android:$koinVersion"
-    implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
-    implementation "org.koin:koin-androidx-scope:$koinVersion"
+    // di
+    implementation rootProject.ext.koin.koin
+    implementation rootProject.ext.koin.koin_scope
 }

@@ -4,14 +4,15 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion Integer.parseInt(ANDROID_COMPILE_SDK_VERSION)
+    compileSdkVersion rootProject.ext.compile_sdk_version
+    buildToolsVersion rootProject.ext.build_tools_version
 
 
     defaultConfig {
-        minSdkVersion Integer.parseInt(ANDROID_MIN_SDK_VERSION)
-        targetSdkVersion Integer.parseInt(ANDROID_TARGET_SDK_VERSION)
-        versionCode Integer.parseInt(VERSION_CODE)
-        versionName VERSION_NAME
+        minSdkVersion rootProject.ext.min_sdk_version
+        targetSdkVersion rootProject.ext.target_sdk_version
+        versionCode rootProject.ext.version_code
+        versionName rootProject.ext.version_name
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -26,27 +27,40 @@ android {
 }
 
 dependencies {
-    implementation project(':domain')
+    // Libs:
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoVersion"
+    // Module Dependencies:
+    implementation project(":domain")
 
-    //networking
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3LogInterceptor"
+    // Common:
+    implementation rootProject.ext.common.kotlin_stdlib_jdk7
+    implementation rootProject.ext.common.core_ktlx
+    implementation rootProject.ext.common.timber
 
-    //database
-    implementation "androidx.room:room-runtime:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
-    implementation "androidx.room:room-ktx:$roomVersion"
+    // Retrofit:
+    implementation rootProject.ext.retrofit.retrofit
+    implementation rootProject.ext.retrofit.converter_gson
+    implementation rootProject.ext.retrofit.logging_interceptor
+    implementation rootProject.ext.retrofit.retrofit_coroutine_adapter
 
-    //di
-    implementation "org.koin:koin-android:$koinVersion"
-    implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
-    implementation "org.koin:koin-androidx-scope:$koinVersion"
+    // Coroutines:
+    implementation rootProject.ext.coroutines.core
+    implementation rootProject.ext.coroutines.android
+
+    // Room:
+    implementation rootProject.ext.room.room_runtime
+    kapt rootProject.ext.room.room_compiler
+    implementation rootProject.ext.room.room_ktx
+
+    // Di:
+    implementation rootProject.ext.koin.koin
+    implementation rootProject.ext.koin.koin_scope
+
+    // Unit Testing:
+    testImplementation rootProject.ext.testCommon.junit
+    testImplementation rootProject.ext.testCommon.core_testing
+    testImplementation rootProject.ext.testCommon.test_coroutines
+    testImplementation rootProject.ext.testCommon.koin_test
+    implementation rootProject.ext.testCommon.test_core
 }
